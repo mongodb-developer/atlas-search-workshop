@@ -1,0 +1,8 @@
+{
+  "position": 4,
+  "label": "🔢 Faceting",
+  "link": {
+    "type": "generated-index",
+    "description": "Faceting"
+  }
+}

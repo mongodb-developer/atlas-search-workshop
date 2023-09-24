@@ -1,0 +1,82 @@
+---
+sidebar_position: 0
+---
+
+# Vector Lab Overview
+
+:::note
+Lab Goals:
+* Understand vector search concepts, configuration, and usage
+* Explore 2-dimensional vectors
+:::
+
+
+# ↗ Vector Search
+
+```js
+[
+  {
+    "doc_num": 1,
+    "v": [0.5,0.5]
+  },
+  {
+    "doc_num": 2,
+    "v": [-0.5,0.5]
+  },
+  {
+    "doc_num": 3,
+    "v": [1.0,1.0]
+  }
+]
+```
+
+<details>
+<summary>knnVector index configuration</summary>
+<div>
+
+```js
+{
+  "mappings": {
+    "dynamic": true,
+    "fields": {
+      "v": [
+        {
+          "dimensions": 2,
+          "similarity": "euclidean",
+          "type": "knnVector"
+        }
+      ]
+    }
+  }
+}
+```
+
+</div>
+</details>
+
+<details>
+<summary>$search for nearest neighbors</summary>
+<div>
+
+```js
+[
+  {
+    $search: {
+      index: "default",
+      knnBeta: {
+        vector: [0.5, 0.5],
+        path: "v",
+        k: 2,
+      },
+    },
+  },
+  {
+    "$project": {
+      "score": { $meta: "searchScore" }
+    }
+  }
+]
+```
+
+</div>
+</details>

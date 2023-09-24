@@ -1,0 +1,8 @@
+{
+  "position": 6,
+  "label": "📐Vector Search",
+  "link": {
+    "type": "generated-index",
+    "description": "Vector Search"
+  }
+}

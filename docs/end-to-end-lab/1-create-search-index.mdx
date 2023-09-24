@@ -1,14 +1,15 @@
-# 1. Create Search Index
-
 import useBaseUrl from '@docusaurus/useBaseUrl';
 
-# ⚙️ Workshop Setup
+# 🗂️ Create Search Index
 
-# Create Atlas Search indexes
+# Create an Atlas Search index
 
-MongoDB's Atlas Search is a full-text search solution built on top of [Apache Lucene](https://lucene.apache.org/). Atlas Search allows fine-grained text indexing and querying of data persisted in your Atlas database.
+MongoDB's Atlas Search is a full-text search solution built on top of [Apache Lucene](https://lucene.apache.org/).
+Atlas Search allows fine-grained text indexing and querying of data persisted in your Atlas database.
 
-To start using Atlas Search, you must configure a search index on your database. Atlas Search indexes categorize data in an easily searchable format and enable faster document retrieval using certain identifiers. You can create a search index right from the Atlas UI.
+To start using Atlas Search, you must configure a search index on your database.
+Atlas Search indexes categorize data in an easily searchable format and enable
+faster document retrieval using certain identifiers. You can create a search index right from the Atlas UI.
 
 ## Step-by-step guide to creating your first Atlas Search index
 
@@ -16,29 +17,29 @@ To start using Atlas Search, you must configure a search index on your database.
 
     <img
         alt="The 'Database Deployments' page with the 'Create Index' link highlighted"
-        src={useBaseUrl('/img/chapter-2-search-indexes/database-deployments-create-index.png')}
+        src={useBaseUrl('/img/end-to-end-lab/create-search-index-0.png')}
     />
 
 1. Click the **Create Search Index** button.
 
     <img
         alt="The 'Search' section of the cluster details page with the 'Create Search Index' button highlighted"
-        src={useBaseUrl('/img/chapter-2-search-indexes/create-search-index.png')}
+        src={useBaseUrl('/img/end-to-end-lab/create-search-index-1.png')}
     />
 
 1. The first step of building the search index is selecting the configuration method. You can choose from two options — using the **Visual Editor** or writing the configuration yourself with the **JSON Editor**. Let's stick to the default **Visual Editor**. To proceed, click **Next**.
 
     <img
         alt="The 'Configuration Method' step of creating a new search index"
-        src={useBaseUrl('/img/chapter-2-search-indexes/search-index-config-method.png')}
+        src={useBaseUrl('/img/end-to-end-lab/create-search-index-2.png')}
     />
 
 
-1. Next, you need to select a name and data source for your index. Change the name to **fulltextsearch** and select the database **sample_mflix** and the collection **embedded_movies**.
+1. Next, you need to select a name and data source for your index. Leave the name as **default** and select the database **library** and the collection **books**.
 
     <img
         alt="The 'Name & Data Source' step of creating a new search index"
-        src={useBaseUrl('/img/chapter-2-search-indexes/search-index-config-name-datasource.png')}
+        src={useBaseUrl('/img/end-to-end-lab/create-search-index-3.png')}
     />
 
 1. The final step allows you to review the index configuration and refine it if needed. You may also see the JSON that was generated from your configuration by clicking **View JSON**.
@@ -60,7 +61,7 @@ To start using Atlas Search, you must configure a search index on your database.
 
     <img
         alt="The 'Review & Refine' step of creating a new search index"
-        src={useBaseUrl('/img/chapter-2-search-indexes/search-index-config-refine.png')}
+        src={useBaseUrl('/img/end-to-end-lab/create-search-index-4.png')}
     />
 
 1. You'll be redirected to a page showing all of the search indexes used in your Atlas project. Creating the index should take up to a minute.
@@ -69,7 +70,12 @@ To start using Atlas Search, you must configure a search index on your database.
     When your search index reaches status **Active**, you'll be able to see more information about the index. For example, the number of indexed documents, the field mappings and the index size. Notice also that you're using 1 out of the 3 free search indexes that come with your free M0 database.
     :::
 
-    <img
-        alt="List with search indexes"
-        src={useBaseUrl('/img/chapter-2-search-indexes/search-indexes-list.png')}
-    />
+<img
+    alt="List with search indexes"
+    src={useBaseUrl('/img/end-to-end-lab/create-search-index-5.png')}
+/>
+
+<img
+    alt="TBD"
+    src={useBaseUrl('/img/end-to-end-lab/create-search-index-6.png')}
+/>

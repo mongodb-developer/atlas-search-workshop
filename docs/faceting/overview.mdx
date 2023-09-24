@@ -8,3 +8,120 @@ sidebar_position: 0
 Lab Goals:
 * Facet by genres and year buckets, across all documents and within a search
 :::
+
+* Concepts: sets, cardinality, set intersection, buckets
+* Atlas Search provides two types of facet "bucketing":
+  * `stringFacet` buckets
+  * `numberFacet` and `dateFacet` range buckets 
+* Index configuration is required to enable these facets
+
+```
+[
+  {
+    $search: {
+      index: "books",
+      facet: {
+        facets: {
+          year_facet: {
+            type: "number",
+            path: "year",
+            boundaries: [
+              1920, 1930, 1940, 1950, 1960, 1970,
+              1980, 1990, 2000, 2010, 2020, 2030,
+            ],
+            default: "other",
+          },
+          genre_facet: {
+            type: "string",
+            path: "genres",
+          },
+        },
+      },
+    },
+  },
+  {
+    $facet: {
+      docs: [
+        {
+          $limit: 10,
+        },
+        {
+          $project: {
+            title: 1,
+            released: 1,
+          },
+        },
+      ],
+      meta: [
+        {
+          $replaceWith: "$$SEARCH_META",
+        },
+        {
+          $limit: 1,
+        },
+      ],
+    },
+  },
+  {
+    $set: {
+      meta: {
+        $arrayElemAt: ["$meta", 0],
+      },
+    },
+  },
+]
+```
+
+```
+[{
+  "docs": [],
+  "meta": {
+    "count": {
+      "lowerBound": 245789
+    },
+    "facet": {
+      "year_facet": {
+        
+      },
+      "genre_facet": {
+       
+      }
+    }
+  }
+}]
+```
+
+```
+[{
+  "docs": [],
+  "meta": {
+    "count": {
+      "lowerBound": 245789
+    },
+    "facet": {
+      "year_facet": {
+        "buckets": [
+          {
+            "_id": 1920,
+            "count": 35
+          },
+          {
+            "_id": 1930,
+            "count": 56
+          },
+          ...
+          {
+            "_id": 2010,
+            "count": 1330
+          },
+          {
+            "_id": 2020,
+            "count": 1287
+          },
+          {
+            "_id": "other",
+            "count": 1145
+          }
+        ]
+      },...
+```

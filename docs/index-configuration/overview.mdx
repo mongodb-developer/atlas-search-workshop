@@ -8,3 +8,104 @@ sidebar_position: 0
 Lab Goals:
 * Make various English word stems searchable
 :::
+
+
+```
+[
+  // {
+  //   $search: {
+  //     index: "books",
+  //     text: {
+  //       query: "spaced searches",
+  //       path: {
+  //         multi: "english",
+  //         value: "title",
+  //       },
+  //     },
+  //     scoreDetails: true,
+  //   },
+  // }
+  {
+    $search: {
+      index: "books",
+      phrase: {
+        query: "spaced searches",
+        path: "title",
+      },
+    },
+  },
+  {
+    $project: {
+      _id: 0,
+      title: 1,
+      score: {
+        $meta: "searchScore",
+      },
+      scoreDetails: {
+        $meta: "searchScoreDetails",
+      },
+    },
+  },
+]
+```
+
+```
+{
+  "mappings": {
+    "dynamic": true,
+    "fields": {
+      "genres": [
+        {
+          "type": "stringFacet"
+        },
+        {
+          "type": "string"
+        }
+      ],
+      "title": {
+        "multi": {
+          "english": {
+            "analyzer": "lucene.english",
+            "type": "string"
+          },
+          "shingles": {
+            "analyzer": "standard.shingles",
+            "type": "string"
+          }
+        },
+        "type": "string"
+      },
+      "year": [
+        {
+          "type": "numberFacet"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "stringFacet"
+        }
+      ]
+    }
+  },
+  "analyzers": [
+    {
+      "charFilters": [],
+      "name": "standard.shingles",
+      "tokenFilters": [
+        {
+          "type": "lowercase"
+        },
+        {
+          "maxShingleSize": 3,
+          "minShingleSize": 2,
+          "type": "shingle"
+        }
+      ],
+      "tokenizer": {
+        "type": "standard"
+      }
+    }
+  ]
+}
+```

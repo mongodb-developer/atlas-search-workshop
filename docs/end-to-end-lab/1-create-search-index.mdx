@@ -5,42 +5,50 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 MongoDB's Atlas Search is a full-text search solution built on top of [Apache Lucene](https://lucene.apache.org/).
 Atlas Search allows fine-grained text indexing and querying of data persisted in your Atlas database.
 
-To start using Atlas Search, you must configure a search index on your database.
+To start using Atlas Search, you must configure a search index on your collection.
 Atlas Search indexes categorize data in an easily searchable format and enable
-faster document retrieval using certain identifiers. You can create a search index right from the Atlas UI.
+faster document retrieval a range of fuzzy to exact queries on a variety of data types.
+
+You can create a search index right from the Atlas UI. 
+
+:::note
+Atlas CLI offers command-line control and introspection of your Atlas Search indexes. 
+
+Additionally, Atlas CLI offers an easy to use Atlas Search *local development* environment, so you can development
+offline (you lucky digital nomad, you!) and integrate Atlas Search backed tests into your CI/CD environments.
+:::
 
 ## Step-by-step guide to creating your first Atlas Search index
 
-1. Open the **Database Deployments** page in MongoDB Atlas and select **Create Index** in the lower right corner.
+1. From the main cluster page, navigate to the **Search** tab.
 
     <img
         alt="The 'Database Deployments' page with the 'Create Index' link highlighted"
         src={useBaseUrl('/img/end-to-end-lab/create-search-index-0.png')}
     />
 
-1. Click the **Create Search Index** button.
+2. Click the **Create Search Index** button.
 
     <img
         alt="The 'Search' section of the cluster details page with the 'Create Search Index' button highlighted"
         src={useBaseUrl('/img/end-to-end-lab/create-search-index-1.png')}
     />
 
-1. The first step of building the search index is selecting the configuration method. You can choose from two options — using the **Visual Editor** or writing the configuration yourself with the **JSON Editor**. Let's stick to the default **Visual Editor**. To proceed, click **Next**.
+3. The first step of building the search index is selecting the configuration method. You can choose from two options — using the **Visual Editor** or writing the configuration yourself with the **JSON Editor**. Let's stick to the default **Visual Editor**. To proceed, click **Next**.
 
     <img
         alt="The 'Configuration Method' step of creating a new search index"
         src={useBaseUrl('/img/end-to-end-lab/create-search-index-2.png')}
     />
 
-
-1. Next, you need to select a name and data source for your index. Leave the name as **default** and select the database **library** and the collection **books**.
+4. Next, you need to select a name and data source for your index. Leave the name as **default** and select the database **library** and the collection **books**.
 
     <img
         alt="The 'Name & Data Source' step of creating a new search index"
         src={useBaseUrl('/img/end-to-end-lab/create-search-index-3.png')}
     />
 
-1. The final step allows you to review the index configuration and refine it if needed. You may also see the JSON that was generated from your configuration by clicking **View JSON**.
+5. The final step allows you to review the index configuration and refine it if needed. You may also see the JSON that was generated from your configuration by clicking **View JSON**.
 
     ```JSON
     {
@@ -51,29 +59,51 @@ faster document retrieval using certain identifiers. You can create a search ind
     ```
 
     :::info
-    The index is using dynamic field mappings. We didn't configure any explicit (static) mappings between the fields in the documents and the search index. That's why Atlas created dynamic mappings that match the data in the documents to some common field types such as `double`, `string`, `array`, `int`, and `double`.
-    Dynamic mappings are useful when you're just getting started with Atlas Search or if your schema changes regularly. However, they take up more space compared to static mappings.
+    The index is using dynamic field mappings. We didn't configure any explicit (static) mappings between the
+    fields in the documents and the search index. That's why Atlas created dynamic mappings that match the data
+    in the documents to some common field types such as `double`, `string`, `array`, `int`, and `double`.
+    Dynamic mappings are useful when you're just getting started with Atlas Search or if your schema changes regularly.
+    However, defining static mappings open up deeper capabilities and allow the ability to fine-tune what and how fields
+    of your documents are indexed and, thereby, searcahble.
     :::
 
-1. You don't need to refine this index. Go ahead and click **Create Search Index**.
+6. You don't need to refine this index. Go ahead and click **Create Search Index**.
 
     <img
-        alt="The 'Review & Refine' step of creating a new search index"
+        alt="Index build in progress: robot cartoon splash"
         src={useBaseUrl('/img/end-to-end-lab/create-search-index-4.png')}
     />
 
-1. You'll be redirected to a page showing all of the search indexes used in your Atlas project. Creating the index should take up to a minute.
+7. You'll be redirected to a page showing all of the search indexes used in your Atlas project.
+Creating a full, or initial, index build could take a while.  Index build time will depend on a number of factors
+including:
 
-    :::info
-    When your search index reaches status **Active**, you'll be able to see more information about the index. For example, the number of indexed documents, the field mappings and the index size. Notice also that you're using 1 out of the 3 free search indexes that come with your free M0 database.
-    :::
+* Tier of service for your cluster
+* Number of documents in the collection
+* Solar flares
+* Size of the documents (lots of fields? one or more _large_ field values?)
+* Index configuration (dynamic mapping? lots of field names used across collection? multi mapping a single field into differently indexed fields? nature of analyzers used?  ngrams?)
+
+That being said - for this lab data, it should take no more than 5 minutes (***TBD test this out!***)
+
+After the full index is built, the e-mail contact for the cluster will receive an e-mail notification that the search index build
+completed.
 
 <img
-    alt="List with search indexes"
+    alt="Search index build complete e-mail"
     src={useBaseUrl('/img/end-to-end-lab/create-search-index-5.png')}
 />
 
+:::info
+When your search index reaches status **Active**, you'll be able to see more information about the index.
+For example, the number of indexed documents, the field mappings and the index size.
+You may notice that you're using 1 out of the 3 search indexes that come with your free M0 cluster; different tiers
+have [different limitations](https://www.mongodb.com/docs/atlas/atlas-search/limitations/).
+:::
+
 <img
-    alt="TBD"
+    alt="Active Search Index Status: Active"
     src={useBaseUrl('/img/end-to-end-lab/create-search-index-6.png')}
 />
+
+✅ Is your `default` library.books collection index Active?

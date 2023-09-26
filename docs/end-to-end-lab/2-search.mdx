@@ -9,3 +9,109 @@
 * Compass [optional]
 * Atlas aggregation UI
   * "export to language" (`Node` in our case)
+
+1. Navigate to the Search Tester for the `library.books` `default` Atlas Search index.
+
+2. Search for "tao of pooh".
+
+What does the Search Tester do behind the scenes?
+
+<details>
+<summary>Click "Edit $search Query"</summary>
+<div>
+
+```js
+[
+  {
+    $search: {
+      index: "default",
+      text: {
+        query: "tao of pooh",
+        path: {
+          wildcard: "*"
+        }
+      }
+    }
+  }
+]
+```
+:::caution
+
+Two things about this query:
+* The `text` operator will *OR* all of the analyzed `query` terms. _tao OR of OR pooh_
+* `path: {wildcard: "*"}` searches against every type matching indexed field.
+
+So this is a pretty heavy query, in terms of broadcasting query terms across your entire corpus. Heavy doesn't necessarily
+mean _slow_ as this query will complete in a split fraction of a second, though generally we want to craft queries in 
+a more nuanced, domain and user aware, fashion to improve both precision and recall, leveraging innate relevancy ranking,
+and fine-tuned scoring controls. For example, in this case we probably don't really want to match documents that match only
+because they have the word "of" indexed in any textual field. Interestingly, the best book for our query does appear first
+even with a broadcast, catch-all sort of query. Relevancy for the win here, as documents rank higher when more of the
+query terms match. So even with broad queries, relevancy ranking still can do a decent job.
+
+:::
+
+</div>
+</details>
+
+3. Let's go ahead take the next step towards wrangling `$search` queries, by using an aggregation pipeline tool, such as
+the Atlas collections aggregation. Copy the `$search` aggregation pipeline behind the scenes of the Search Tester and
+navigate to the Atlas library.books collection's "Aggregation" tab, pasting it into the "TEXT" area.
+
+While you're here, edit the query to only search by phrase, not just loose OR'd terms, on only the `title` field.
+
+<details>
+<summary>`phrase` search on `title` field</summary>
+<div>
+
+```js
+
+[
+  {
+    $search: {
+      index: "default",
+      phrase: {
+        query: "tao of pooh",
+        path: ["title"]
+      }
+    }
+  }
+]
+```
+
+:::tip
+
+The `phrase` operator first analyzes the `query` text into individual terms, then constructs a query that matches these
+terms in consecutive, or close (see _slop_ factor), order. In this case, we match those three consecutive words, "tao of pooh",
+in the `title` field. Note how the results are in pretty decent relevancy order (by title).
+
+:::
+
+</div>
+</details>
+
+4. "Export to Language" copy the code for your current aggregation pipeline.  You'll use this code in the next section.
+
+<details>
+<summary>export to code: Node</summary>
+<div>
+
+```js
+[
+  {
+    '$search': {
+      'index': 'default', 
+      'phrase': {
+        'query': 'tao of pooh', 
+        'path': [
+          'title'
+        ]
+      }
+    }
+  }
+]
+```
+</div>
+</details>
+
+✅ Got code? Let's go!

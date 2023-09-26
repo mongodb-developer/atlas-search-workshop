@@ -1,1 +1,34 @@
 # 3. 💻 Code
+
+* Paste code into the search service stubs
+* Try service end-point: http://locahost:5000/books/search
+
+`server/src/controllers/books.ts#searchBooks` should look like this:
+
+```js
+    public async searchBooks(query: string, limit: number = 12, skip: number = 0): Promise<Book[]> {
+        if (limit > 100) limit = 100;
+
+        const searchPipeline = [
+            {
+                '$search': {
+                  'index': 'default', 
+                  'phrase': {
+                    'query': query, 
+                    'path': [
+                      'title'
+                    ]
+                  }
+                }
+              },
+            { $skip: skip },
+            { $limit: limit }
+        ];
+
+        const booksAgg = collections?.books?.aggregate<Book>(searchPipeline);
+        const books = await booksAgg.toArray();
+        return books;   
+    }
+```
+
+Now search as you type in the [Books Catalogue](http://localhost:4200/catalogue)

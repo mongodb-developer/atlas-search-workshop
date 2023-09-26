@@ -1,12 +1,12 @@
 # 3. 💻 Code
 
-* Paste code into the search service stubs
-* Try service end-point: http://locahost:5000/books/search
+* Paste code into the search service stubs, parameterizing the `query`
+* Implement service end-point: http://locahost:5000/books/search?q=`<query>`[&limit=10][&skip=0]
 
 `server/src/controllers/books.ts#searchBooks` should look like this:
 
 ```js
-    public async searchBooks(query: string, limit: number = 12, skip: number = 0): Promise<Book[]> {
+    public async searchBooks(query: string, limit: number = 10, skip: number = 0): Promise<Book[]> {
         if (limit > 100) limit = 100;
 
         const searchPipeline = [
@@ -30,5 +30,7 @@
         return books;   
     }
 ```
+
+Service end-point: [http://localhost:5000/books/search?q=tao](http://localhost:5000/books/search?q=tao)
 
 Now search as you type in the [Books Catalogue](http://localhost:4200/catalogue)

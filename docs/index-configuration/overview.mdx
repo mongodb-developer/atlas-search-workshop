@@ -9,45 +9,42 @@ Lab Goals:
 * Make various English word stems searchable
 :::
 
+1. First try this aggregation pipeline:
 
 ```
 [
-  // {
-  //   $search: {
-  //     index: "books",
-  //     text: {
-  //       query: "spaced searches",
-  //       path: {
-  //         multi: "english",
-  //         value: "title",
-  //       },
-  //     },
-  //     scoreDetails: true,
-  //   },
-  // }
   {
     $search: {
       index: "books",
       phrase: {
         query: "spaced searches",
-        path: "title",
-      },
-    },
+        path: "title"
+      }
+    }
   },
   {
     $project: {
       _id: 0,
       title: 1,
       score: {
-        $meta: "searchScore",
+        $meta: "searchScore"
       },
       scoreDetails: {
-        $meta: "searchScoreDetails",
-      },
-    },
-  },
+        $meta: "searchScoreDetails"
+      }
+    }
+  }
 ]
 ```
+
+2. Try "space search" instead, for the `query`.  What's the difference and why?
+
+Let's build a new index with some additional analyzers defined, and while we're going to be
+building a fresh index, we'll go ahead and define some facet fields as well so we don't need to rebuild
+an index in the Facting lab too.
+
+3. Create new index on `library.books` named `books` (the initial index created is named `default`),
+   using this JSON mapping definition
 
 ```
 {
@@ -66,6 +63,10 @@ Lab Goals:
         "multi": {
           "english": {
             "analyzer": "lucene.english",
+            "type": "string"
+          },
+          "phonetic": {
+            "analyzer": "phonetic",
             "type": "string"
           },
           "shingles": {
@@ -105,7 +106,70 @@ Lab Goals:
       "tokenizer": {
         "type": "standard"
       }
+    },
+    {
+      "name": "phonetic",
+      "tokenFilters": [
+        {
+          "originalTokens": "include",
+          "type": "daitchMokotoffSoundex"
+        }
+      ],
+      "tokenizer": {
+        "type": "standard"
+      }
     }
   ]
 }
 ```
+
+4. When that index is active, try this search now:
+
+```
+  {
+    $search: {
+      index: "books",
+      text: {
+        query: "spaced searches",
+        path: {
+          multi: "english",
+          value: "title"
+        }
+      }
+      scoreDetails: true
+    }
+  }
+```
+Notice how we now can search `title` using the default `lucene.standard` analyzer, or specify the `english` analyzed version.
+We could have made the default analyzer `lucene.english` for all dynamic fields where no "multi" path is needed at query
+time. Having fields analyzed multiple ways is a useful technique for better tuned relevancy or more flexible findability.
+
+:::tip
+`path` can be an array of path specifications, either concrete field names, wildcard, or "multi" variants.
+:::
+
+✅ Were you successful in finding "Space Search" from the "spaced searches" query?
+
+# Discussion
+
+Let's talk about inverted indexes and how Atlas Search maps your Atlas documents to the underlying Lucene index...
+
+:::tip
+Did you notice that `phonetic` filter we snuck in there?  What can you do with that?
+
+```
+  compound: {
+    should: [
+      {
+        phrase: {
+          query: "dao of pooh",
+          path: {"value": "title","multi":"phonetic"},
+        },
+      },
+    ],
+  }
+```
+
+:::
+
+TBD - deserves some diagrams/tables

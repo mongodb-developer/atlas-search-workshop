@@ -10,25 +10,30 @@ Lab Goals:
 * Explore 2-dimensional vectors
 :::
 
-
 # ↗ Vector Search
+
+1. Create a new collection, called `vectors` (it's fine to put this in your copy of the `library` database alongside `books`),
+   and populate it with the following data:
 
 ```js
 [
   {
     "doc_num": 1,
-    "v": [0.5,0.5]
+    "v": [0.17,0.32]
   },
   {
     "doc_num": 2,
-    "v": [-0.5,0.5]
+    "v": [-0.49,0.69]
   },
   {
     "doc_num": 3,
-    "v": [1.0,1.0]
+    "v": [0.95,0.88]
   }
 ]
 ```
+
+2. Create an Atlas Search index for the `vectors` collection, leave its name as `default`.
+   Use this JSON index configuration.
 
 <details>
 <summary>knnVector index configuration</summary>
@@ -53,6 +58,8 @@ Lab Goals:
 
 </div>
 </details>
+
+3. After this new index is saved and Active, search it for documents near a query vector:
 
 <details>
 <summary>$search for nearest neighbors</summary>

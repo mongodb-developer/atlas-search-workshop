@@ -10,7 +10,14 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 :::note
 Lab Goals:
 * Understand importance of query analytics
+* Add tracking to our `$search` queries
 * Add and effectively use syonyms
+:::
+
+:::caution
+If your application, like this library search interface does, performs searches for practically every keystroke, you 
+may want to only add `tracking` on fully formed search requests. Tracking partial queries may or may not be useful or
+clutter the insights of Query Analytics.
 :::
 
 <img
@@ -27,3 +34,13 @@ Lab Goals:
     alt="TBD"
     src={useBaseUrl('/img/query-analytics/no-results.png')}
 />
+
+1. Add tracking to your queries:
+
+```
+"tracking": {
+  "searchTerms": "<query>"
+}
+```
+
+[Tracking Search Terms documentation](https://www.mongodb.com/docs/atlas/atlas-search/tracking/)

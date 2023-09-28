@@ -1,9 +1,21 @@
 # 3. 💻 Code
 
-* Paste code into the search service stubs, parameterizing the `query`
-* Implement service end-point: http://locahost:5000/books/search?q=`<query>`[&limit=10][&skip=0]
+Now is the moment of truth, where `$search` integrates into our book application, and becomes truly *usable*. Having a
+working application that we can iterate on is the best way to proceed with our Atlas Search learning journey. It's your
+data. It's your app. It's your `$search` pipeline. When it's all working we feel confident and can now safely make changes
+and see the effect of those changes through the experiences of our users.
 
-`server/src/controllers/books.ts#searchBooks` should look like this:
+Just like in the previous two sections, let's go, 1..., 2..., 3!
+
+1. Implement `/books/search?q=<query>` search service
+
+Paste code into the search service stub, parameterizing the `query`.
+
+<details>
+<summary>Service endpoint implementation</summary>
+<div>
+
+`server/src/controllers/books.ts#searchBooks`:
 
 ```js
     public async searchBooks(query: string, limit: number = 10, skip: number = 0): Promise<Book[]> {
@@ -30,7 +42,21 @@
         return books;   
     }
 ```
+</div>
+</details>
 
-Service end-point: [http://localhost:5000/books/search?q=tao](http://localhost:5000/books/search?q=tao)
+## 2. Service end-point in action
 
-Now search as you type in the [Books Catalogue](http://localhost:4200/catalogue)
+Got JSON? [http://localhost:5000/books/search?q=tao](http://localhost:5000/books/search?q=tao)
+
+3. Search UI
+
+Seeing ideally *relevant* book covers, as we type, is a nice way to experience the benefits of Atlas Search. With this
+straightforward baseline, using the defaults, we now have a multitude of ways to adjust 
+
+<img
+    alt="End result of $search integration into our book app"
+    src={useBaseUrl('/img/end-to-end-lab/app-search-ui.png')}
+/>
+
+✅ Search as you type in the [Books Catalogue](http://localhost:4200/catalogue) works?
